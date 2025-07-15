@@ -5,20 +5,20 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 # Recommended
-TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "")
-APP_ID = int(os.environ.get("APP_ID", ""))
-API_HASH = os.environ.get("API_HASH", "")
+TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "7772032655:AAFUR5BQ6hVZ2KMGFC31BPlGTtA85w8yUHk")
+APP_ID = int(os.environ.get("APP_ID", "21184495"))
+API_HASH = os.environ.get("API_HASH", "7238819d51a5280143fc3023a2f1abed")
 
 # Main
-OWNER_ID = int(os.environ.get("OWNER_ID", "6497757690"))
+OWNER_ID = int(os.environ.get("OWNER_ID", "8162859297"))
 PORT = os.environ.get("PORT", "8022")
 
 # Database
-DB_URI = os.environ.get("DATABASE_URL", "mongodb")
+DB_URI = os.environ.get("DATABASE_URL", "mongodb+srv://akashrabha2005:781120@cluster0.pv6yd2f.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 DB_NAME = os.environ.get("DATABASE_NAME", "link")
 
 #Auto approve 
-CHAT_ID = [int(app_chat_id) if id_pattern.search(app_chat_id) else app_chat_id for app_chat_id in environ.get('CHAT_ID', '').split()] # dont change anything 
+CHAT_ID = [int(app_chat_id) if id_pattern.search(app_chat_id) else app_chat_id for app_chat_id in environ.get('CHAT_ID', '-1002849512654').split()] # dont change anything 
 TEXT = environ.get("APPROVED_WELCOME_TEXT", "<b>{mention},\n\nʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ᴛᴏ ᴊᴏɪɴ {title} ɪs ᴀᴘᴘʀᴏᴠᴇᴅ.\n\‣ ᴘᴏᴡᴇʀᴇᴅ ʙʏ @Codeflix_Bots</b>")
 APPROVED = environ.get("APPROVED_WELCOME", "on").lower()
 
@@ -53,19 +53,19 @@ USER_REPLY_TEXT = "⚠️ ғᴜᴄᴋ ʏᴏᴜ, ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴍʏ
 
 # Logging
 LOG_FILE_NAME = "links-sharingbot.txt"
-DATABASE_CHANNEL = int(os.environ.get("DATABASE_CHANNEL", "")) # Channel where user links are stored
+DATABASE_CHANNEL = int(os.environ.get("DATABASE_CHANNEL", "-1002849512654")) # Channel where user links are stored
 #--- ---- ---- --- --- --- - -- -  - - - - - - - - - - - --  - -
 
 try:
     ADMINS = []
-    for x in (os.environ.get("ADMINS", "7993998594 6497757690 5585016974").split()):
+    for x in (os.environ.get("ADMINS", "8162859297").split()):
         ADMINS.append(int(x))
 except ValueError:
     raise Exception("Your Admins list does not contain valid integers.")
 
 # Admin == OWNER_ID
 ADMINS.append(OWNER_ID)
-ADMINS.append(6497757690)
+ADMINS.append(8162859297)
 
 
 logging.basicConfig(
