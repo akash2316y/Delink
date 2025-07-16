@@ -1,4 +1,3 @@
-# +++ Modified By Yato [telegram username: @i_killed_my_clan & @ProYato] +++ # aNDI BANDI SANDI JISNE BHI CREDIT HATAYA USKI BANDI RAndi 
 import asyncio
 import base64
 from bot import Bot
@@ -16,7 +15,7 @@ PAGE_SIZE = 6
 
 # Revoke invite link after 5-10 minutes
 async def revoke_invite_after_5_minutes(client: Bot, channel_id: int, link: str, is_request: bool = False):
-    await asyncio.sleep(300)  # 10 minutes
+    await asyncio.sleep(60)  # 10 minutes
     try:
         if is_request:
             await client.revoke_chat_invite_link(channel_id, link)
