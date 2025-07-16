@@ -118,7 +118,7 @@ async def start_command(client: Bot, message: Message):
             )
 
             # Auto-delete the note message after 5 minutes
-            asyncio.create_task(delete_after_delay(note_msg, 300))
+            asyncio.create_task(delete_after_delay(note_msg, 60))
 
             asyncio.create_task(revoke_invite_after_5_minutes(client, channel_id, invite.invite_link, is_request))
 
@@ -416,9 +416,10 @@ async def cb_handler(client: Bot, query: CallbackQuery):
     elif data in ["start", "home"]:
         inline_buttons = InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
-                 InlineKeyboardButton("• ᴄʜᴀɴɴᴇʟs", callback_data="channels")],
-                [InlineKeyboardButton("• Close •", callback_data="close")]
+                [
+                 InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
+                 InlineKeyboardButton("ᴄʟᴏsᴇ •", callback_data="close")
+                ]
             ]
         )
         try:
