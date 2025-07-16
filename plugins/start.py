@@ -4,7 +4,7 @@ import time
 from collections import defaultdict
 from pyrogram import Client, filters
 from pyrogram.enums import ParseMode, ChatMemberStatus
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto
 from pyrogram.errors import FloodWait, UserNotParticipant
 
 from bot import Bot
@@ -16,6 +16,7 @@ from helper_func import *
 
 user_banned_until = {}
 
+# Broadcast variables
 cancel_lock = asyncio.Lock()
 is_canceled = False
 
@@ -37,7 +38,6 @@ async def start_command(client: Bot, message: Message):
         try:
             base64_string = text.split(" ", 1)[1]
             is_request = base64_string.startswith("req_")
-            
             if is_request:
                 base64_string = base64_string[4:]
                 channel_id = await get_channel_by_encoded_link2(base64_string)
@@ -81,11 +81,7 @@ async def start_command(client: Bot, message: Message):
             button_text = "• ʀᴇǫᴜᴇsᴛ ᴛᴏ ᴊᴏɪɴ •" if is_request else "• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •"
             button = InlineKeyboardMarkup([[InlineKeyboardButton(button_text, url=invite.invite_link)]])
 
-            wait_msg = await message.reply_text(
-                "<b>Please wait...</b>",
-                parse_mode=ParseMode.HTML
-            )
-            
+            wait_msg = await message.reply_text("<b>Please wait...</b>", parse_mode=ParseMode.HTML)
             await asyncio.sleep(0.5)
             await wait_msg.delete()
             
@@ -100,7 +96,7 @@ async def start_command(client: Bot, message: Message):
                 parse_mode=ParseMode.HTML
             )
 
-            asyncio.create_task(delete_after_delay(note_msg, 60))
+            asyncio.create_task(delete_after_delay(note_msg, 300))
             asyncio.create_task(revoke_invite_after_5_minutes(client, channel_id, invite.invite_link, is_request))
 
         except Exception as e:
@@ -111,8 +107,12 @@ async def start_command(client: Bot, message: Message):
             print(f"Decoding error: {e}")
     else:
         inline_buttons = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("Close •", callback_data="close")]]
+            [
+                [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about")],
+                [InlineKeyboardButton("• Close •", callback_data="close")]
+            ]
         )
+        
         await message.reply_text(
             START_MSG,
             reply_markup=inline_buttons,
@@ -124,31 +124,6 @@ async def close_callback(client: Bot, callback_query):
     await callback_query.answer()
     await callback_query.message.delete()
 
-@Bot.on_callback_query(filters.regex("check_sub"))
-async def check_sub_callback(client: Bot, callback_query: CallbackQuery):
-    user_id = callback_query.from_user.id
-    fsub_channels = await get_fsub_channels()
-    
-    if not fsub_channels:
-        await callback_query.message.edit_text(
-            "<b>No FSub channels configured!</b>",
-            parse_mode=ParseMode.HTML
-        )
-        return
-    
-    is_subscribed, subscription_message, subscription_buttons = await check_subscription_status(client, user_id, fsub_channels)
-    if is_subscribed:
-        await callback_query.message.edit_text(
-            "<b>You are subscribed to all required channels! Use /start to proceed.</b>",
-            parse_mode=ParseMode.HTML
-        )
-    else:
-        await callback_query.message.edit_text(
-            subscription_message,
-            reply_markup=subscription_buttons,
-            parse_mode=ParseMode.HTML
-        )
-
 @Bot.on_callback_query()
 async def cb_handler(client: Bot, query: CallbackQuery):
     data = query.data  
@@ -159,9 +134,25 @@ async def cb_handler(client: Bot, query: CallbackQuery):
             await query.message.reply_to_message.delete()
         except:
             pass
+    
+    elif data == "about":
+        user = await client.get_users(OWNER_ID)
+        user_link = f"https://t.me/{user.username}" if user.username else f"tg://openmessage?user_id={OWNER_ID}"
+        
+        await query.edit_message_text(
+            ABOUT_TXT,
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton('• ʙᴀᴄᴋ', callback_data='start'), InlineKeyboardButton('ᴄʟᴏsᴇ •', callback_data='close')]
+            ]),
+            parse_mode=ParseMode.HTML
+        )
+
     elif data in ["start", "home"]:
         inline_buttons = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("Close •", callback_data="close")]]
+            [
+                [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about")],
+                [InlineKeyboardButton("• Close •", callback_data="close")]
+            ]
         )
         try:
             await query.edit_message_text(
@@ -170,7 +161,7 @@ async def cb_handler(client: Bot, query: CallbackQuery):
                 parse_mode=ParseMode.HTML
             )
         except Exception as e:
-            print(f"Error sending start/home text: {e}")
+            print(f"Error restoring start menu: {e}")
 
 def delete_after_delay(msg, delay):
     async def inner():
