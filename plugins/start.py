@@ -110,7 +110,7 @@ async def start_command(client: Bot, message: Message):
             [
                 [
                  InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
-                 InlineKeyboardButton("• Close •", callback_data="close")
+                 InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close")
                 ]
             ]
         )
@@ -154,7 +154,7 @@ async def cb_handler(client: Bot, query: CallbackQuery):
             [
                 [
                  InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
-                 InlineKeyboardButton("• Close •", callback_data="close")
+                 InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close")
                 ]
             ]
         )
