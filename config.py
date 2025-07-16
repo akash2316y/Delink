@@ -25,7 +25,7 @@ APPROVED = environ.get("APPROVED_WELCOME", "on").lower()
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "40"))
 #--- ---- ---- --- --- --- - -- -  - - - - - - - - - - - --  - -
 # Messages
-START_MSG = os.environ.get("START_MESSAGE", "<b>ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ᴀᴅᴠᴀɴᴄᴇᴅ ʟɪɴᴋs sʜᴀʀɪɴɢ ʙᴏᴛ. ᴡɪᴛʜ ᴛʜɪs ʙᴏᴛ, ʏᴏᴜ ᴄᴀɴ sʜᴀʀᴇ ʟɪɴᴋs ᴀɴᴅ ᴋᴇᴇᴘ ʏᴏᴜʀ ᴄʜᴀɴɴᴇʟs sᴀғᴇ ғʀᴏᴍ ᴄᴏᴘʏʀɪɢʜᴛ ɪssᴜᴇs.\n\n<blockquote>‣ ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ : <a href='https://t.me/AnimeMuseum'>ᴀɴɪᴍᴇ ᴍᴜsᴇᴜᴍ</a></blockquote></b>")
+START_MSG = os.environ.get("START_MESSAGE", "𝖧𝖾𝗒 {mention}\n\n     𝖨 𝖺𝗆 𝖩𝗎𝗌𝗍 𝖺 𝗅𝗂𝗇𝗄 𝗌𝗁𝖺𝗋𝗂𝗇𝗀 𝖻𝗈𝗍.\n 𝖶𝗈𝗋𝗄𝗂𝗇𝗀 𝖥𝗈𝗋 𝖠𝗇𝗂𝗆𝖾 𝖬𝗎𝗌𝖾𝗎𝗆")
 HELP = os.environ.get("HELP_MESSAGE", "<b><blockquote expandable>» Creator: <a href=https://t.me/proyato>Yato</a>\n» Our Community: <a href=https://t.me/otakuflix_network>Flix Network</a>\n» Anime Channel: <a href=https://t.me/animes_cruise>Anime Cruise</a>\n» Ongoing Anime: <a href=https://t.me/Ongoing_cruise>Ongoing cruise</a>\n» Developer: <a href=https://t.me/onlyyuji>Yuji</a></b>")
 ABOUT = os.environ.get("ABOUT_MESSAGE", "<b><blockquote expandable>This bot is developed by Yato (@ProYato) to securely share Telegram channel links with temporary invite links, protecting your channels from copyright issues.</b>")
 ABOUT_TXT = """Made By : Anime Museum"""
