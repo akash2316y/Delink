@@ -6,6 +6,7 @@ from pyrogram import Client, filters
 from pyrogram.enums import ParseMode, ChatMemberStatus
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto
 from pyrogram.errors import FloodWait, UserNotParticipant
+from html import escape
 
 from bot import Bot
 from datetime import datetime, timedelta
@@ -32,6 +33,9 @@ async def start_command(client: Bot, message: Message):
             )
             
     await add_user(user_id)
+
+    user = message.from_user
+    mention = f'<a href="tg://user?id={user.id}">{escape(user.first_name)}</a>'
 
     text = message.text
     if len(text) > 7:
@@ -116,7 +120,7 @@ async def start_command(client: Bot, message: Message):
         )
         
         await message.reply_text(
-            START_MSG,
+            START_MSG.format(mention=mention),
             reply_markup=inline_buttons,
             parse_mode=ParseMode.HTML
         )
@@ -150,6 +154,8 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         )
 
     elif data in ["start", "home"]:
+        user = query.from_user
+        mention = f'<a href="tg://user?id={user.id}">{escape(user.first_name)}</a>'
         inline_buttons = InlineKeyboardMarkup(
             [
                 [
@@ -160,7 +166,7 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         )
         try:
             await query.edit_message_text(
-                START_MSG,
+                START_MSG.format(mention=mention),
                 reply_markup=inline_buttons,
                 parse_mode=ParseMode.HTML
             )
