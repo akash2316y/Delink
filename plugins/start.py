@@ -108,8 +108,10 @@ async def start_command(client: Bot, message: Message):
     else:
         inline_buttons = InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about")],
-                [InlineKeyboardButton("• Close •", callback_data="close")]
+                [
+                 InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
+                 InlineKeyboardButton("• Close •", callback_data="close")
+                ]
             ]
         )
         
@@ -150,8 +152,10 @@ async def cb_handler(client: Bot, query: CallbackQuery):
     elif data in ["start", "home"]:
         inline_buttons = InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about")],
-                [InlineKeyboardButton("• Close •", callback_data="close")]
+                [
+                 InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
+                 InlineKeyboardButton("• Close •", callback_data="close")
+                ]
             ]
         )
         try:
