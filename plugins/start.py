@@ -110,21 +110,21 @@ async def start_command(client: Bot, message: Message):
             )
             print(f"Decoding error: {e}")
     else:
-        inline_buttons = InlineKeyboardMarkup(
+    inline_buttons = InlineKeyboardMarkup(
+        [
             [
-                [
-                 InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
-                 InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close")
-                ]
+                InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
+                InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close")
             ]
-        )
-        
-        await message.reply_text(
-            START_MSG.format(mention=mention),
-            reply_markup=inline_buttons,
-            parse_mode=ParseMode.HTML
-        )
+        ]
+    )
 
+    await message.reply_text(
+        START_MSG.format(mention=mention, first=escape(user.first_name)),
+        reply_markup=inline_buttons,
+        parse_mode=ParseMode.HTML
+    )
+    
 @Bot.on_callback_query(filters.regex("close"))
 async def close_callback(client: Bot, callback_query):
     await callback_query.answer()
