@@ -1,14 +1,13 @@
 import asyncio
 import base64
-import time
-from collections import defaultdict
+from datetime import datetime, timedelta
+
 from pyrogram import Client, filters
 from pyrogram.enums import ParseMode, ChatMemberStatus
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto
-from pyrogram.errors import FloodWait, UserNotParticipant
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from pyrogram.errors import UserNotParticipant
 
 from bot import Bot
-from datetime import datetime, timedelta
 from config import *
 from database.database import *
 from plugins.newpost import revoke_invite_after_5_minutes
@@ -20,6 +19,7 @@ user_banned_until = {}
 cancel_lock = asyncio.Lock()
 is_canceled = False
 
+
 @Bot.on_message(filters.command('start') & filters.private)
 async def start_command(client: Bot, message: Message):
     user_id = message.from_user.id
@@ -30,7 +30,7 @@ async def start_command(client: Bot, message: Message):
                 "<b><blockquote expandable>You are temporarily banned from using commands due to spamming. Try again later.</b>",
                 parse_mode=ParseMode.HTML
             )
-            
+
     await add_user(user_id)
 
     text = message.text
@@ -43,7 +43,7 @@ async def start_command(client: Bot, message: Message):
                 channel_id = await get_channel_by_encoded_link2(base64_string)
             else:
                 channel_id = await get_channel_by_encoded_link(base64_string)
-            
+
             if not channel_id:
                 return await message.reply_text(
                     "<b><blockquote expandable>Invalid or expired invite link.</b>",
@@ -84,7 +84,7 @@ async def start_command(client: Bot, message: Message):
             wait_msg = await message.reply_text("<b>Please wait...</b>", parse_mode=ParseMode.HTML)
             await asyncio.sleep(0.5)
             await wait_msg.delete()
-            
+
             await message.reply_text(
                 "<b><blockquote expandable>ʜᴇʀᴇ ɪs ʏᴏᴜʀ ʟɪɴᴋ! ᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ᴛᴏ ᴘʀᴏᴄᴇᴇᴅ</b>",
                 reply_markup=button,
@@ -109,36 +109,40 @@ async def start_command(client: Bot, message: Message):
         inline_buttons = InlineKeyboardMarkup(
             [
                 [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about")],
+                [InlineKeyboardButton("• CMD", callback_data="cmd")],
                 [InlineKeyboardButton("• Close •", callback_data="close")]
             ]
         )
-        
+
         await message.reply_text(
             START_MSG,
             reply_markup=inline_buttons,
             parse_mode=ParseMode.HTML
         )
 
+
 @Bot.on_callback_query(filters.regex("close"))
-async def close_callback(client: Bot, callback_query):
+async def close_callback(client: Bot, callback_query: CallbackQuery):
     await callback_query.answer()
     await callback_query.message.delete()
 
+
 @Bot.on_callback_query()
 async def cb_handler(client: Bot, query: CallbackQuery):
-    data = query.data  
-    
+    data = query.data
+    user_id = query.from_user.id
+
     if data == "close":
         await query.message.delete()
         try:
             await query.message.reply_to_message.delete()
         except:
             pass
-    
+
     elif data == "about":
         user = await client.get_users(OWNER_ID)
         user_link = f"https://t.me/{user.username}" if user.username else f"tg://openmessage?user_id={OWNER_ID}"
-        
+
         await query.edit_message_text(
             ABOUT_TXT,
             reply_markup=InlineKeyboardMarkup([
@@ -151,6 +155,7 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         inline_buttons = InlineKeyboardMarkup(
             [
                 [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about")],
+                [InlineKeyboardButton("• CMD", callback_data="cmd")],
                 [InlineKeyboardButton("• Close •", callback_data="close")]
             ]
         )
@@ -162,6 +167,23 @@ async def cb_handler(client: Bot, query: CallbackQuery):
             )
         except Exception as e:
             print(f"Error restoring start menu: {e}")
+
+    elif data == "cmd":
+        if user_id == OWNER_ID:
+            await query.edit_message_text(CMD_MSG, parse_mode=ParseMode.HTML)
+        else:
+            try:
+                member = await client.get_chat_member(LOG_CHANNEL_ID, user_id)
+                if member.status in [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]:
+                    await query.edit_message_text(CMD_MSG, parse_mode=ParseMode.HTML)
+                else:
+                    await query.answer("Only admins can use this ❌", show_alert=True)
+            except UserNotParticipant:
+                await query.answer("Only admins can use this ❌", show_alert=True)
+            except Exception as e:
+                print(f"Error checking admin status: {e}")
+                await query.answer("Something went wrong.", show_alert=True)
+
 
 def delete_after_delay(msg, delay):
     async def inner():
