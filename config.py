@@ -25,7 +25,7 @@ APPROVED = environ.get("APPROVED_WELCOME", "on").lower()
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "40"))
 #--- ---- ---- --- --- --- - -- -  - - - - - - - - - - - --  - -
 # Messages
-START_MSG = os.environ.get("START_MESSAGE", "𝖧𝖾𝗒 {frist}\n     𝖨 𝖺𝗆 𝖩𝗎𝗌𝗍 𝖺 𝗅𝗂𝗇𝗄 𝗌𝗁𝖺𝗋𝗂𝗇𝗀 𝖻𝗈𝗍.\n 𝖶𝗈𝗋𝗄𝗂𝗇𝗀 𝖥𝗈𝗋 𝖠𝗇𝗂𝗆𝖾 𝖬𝗎𝗌𝖾𝗎𝗆")
+START_MSG = os.environ.get("START_MESSAGE", "𝖧𝖾𝗒 {mention}\n     𝖨 𝖺𝗆 𝖩𝗎𝗌𝗍 𝖺 𝗅𝗂𝗇𝗄 𝗌𝗁𝖺𝗋𝗂𝗇𝗀 𝖻𝗈𝗍.\n 𝖶𝗈𝗋𝗄𝗂𝗇𝗀 𝖥𝗈𝗋 𝖠𝗇𝗂𝗆𝖾 𝖬𝗎𝗌𝖾𝗎𝗆")
 ABOUT_TXT = """𝖬𝖺𝖽𝖾 𝖡𝗒 : 𝖠𝗇𝗂𝗆𝖾 𝖬𝗎𝗌𝖾𝗎𝗆"""
 CMD_MSG = "<b>⚙️ Welcome Admin! Here's your control panel.</b>"
 #--- ---- ---- --- --- --- - -- -  - - - - - - - - - - - --  - -
