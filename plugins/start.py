@@ -169,20 +169,10 @@ async def cb_handler(client: Bot, query: CallbackQuery):
             print(f"Error restoring start menu: {e}")
 
     elif data == "cmd":
-        if user_id == OWNER_ID:
+        if user_id == OWNER_ID or user_id in ADMINS:
             await query.edit_message_text(CMD_MSG, parse_mode=ParseMode.HTML)
         else:
-            try:
-                member = await client.get_chat_member(LOG_CHANNEL_ID, user_id)
-                if member.status in [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]:
-                    await query.edit_message_text(CMD_MSG, parse_mode=ParseMode.HTML)
-                else:
-                    await query.answer("Only admins can use this ❌", show_alert=True)
-            except UserNotParticipant:
-                await query.answer("Only admins can use this ❌", show_alert=True)
-            except Exception as e:
-                print(f"Error checking admin status: {e}")
-                await query.answer("Something went wrong.", show_alert=True)
+            await query.answer("Only admins can use this ❌", show_alert=True)
 
 
 def delete_after_delay(msg, delay):
