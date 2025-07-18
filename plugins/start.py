@@ -6,7 +6,6 @@ from pyrogram import Client, filters
 from pyrogram.enums import ParseMode, ChatMemberStatus
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto
 from pyrogram.errors import FloodWait, UserNotParticipant
-from html import escape
 
 from bot import Bot
 from datetime import datetime, timedelta
@@ -33,9 +32,6 @@ async def start_command(client: Bot, message: Message):
             )
             
     await add_user(user_id)
-
-    user = message.from_user
-    mention = f'<a href="tg://user?id={user.id}">{escape(user.first_name)}</a>'
 
     text = message.text
     if len(text) > 7:
@@ -85,7 +81,7 @@ async def start_command(client: Bot, message: Message):
             button_text = "• ʀᴇǫᴜᴇsᴛ ᴛᴏ ᴊᴏɪɴ •" if is_request else "• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •"
             button = InlineKeyboardMarkup([[InlineKeyboardButton(button_text, url=invite.invite_link)]])
 
-            wait_msg = await message.reply_text("<b>Wait...</b>", parse_mode=ParseMode.HTML)
+            wait_msg = await message.reply_text("<b>Please wait...</b>", parse_mode=ParseMode.HTML)
             await asyncio.sleep(0.5)
             await wait_msg.delete()
             
@@ -110,21 +106,19 @@ async def start_command(client: Bot, message: Message):
             )
             print(f"Decoding error: {e}")
     else:
-    inline_buttons = InlineKeyboardMarkup(
-        [
+        inline_buttons = InlineKeyboardMarkup(
             [
-                InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
-                InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close")
+                [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about")],
+                [InlineKeyboardButton("• Close •", callback_data="close")]
             ]
-        ]
-    )
+        )
+        
+        await message.reply_text(
+            START_MSG,
+            reply_markup=inline_buttons,
+            parse_mode=ParseMode.HTML
+        )
 
-    await message.reply_text(
-        START_MSG.format(mention=mention, first=escape(user.first_name)),
-        reply_markup=inline_buttons,
-        parse_mode=ParseMode.HTML
-    )
-    
 @Bot.on_callback_query(filters.regex("close"))
 async def close_callback(client: Bot, callback_query):
     await callback_query.answer()
@@ -154,19 +148,15 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         )
 
     elif data in ["start", "home"]:
-        user = query.from_user
-        mention = f'<a href="tg://user?id={user.id}">{escape(user.first_name)}</a>'
         inline_buttons = InlineKeyboardMarkup(
             [
-                [
-                 InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
-                 InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close")
-                ]
+                [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about")],
+                [InlineKeyboardButton("• Close •", callback_data="close")]
             ]
         )
         try:
             await query.edit_message_text(
-                START_MSG.format(mention=mention),
+                START_MSG,
                 reply_markup=inline_buttons,
                 parse_mode=ParseMode.HTML
             )
