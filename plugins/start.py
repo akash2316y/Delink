@@ -108,9 +108,8 @@ async def start_command(client: Bot, message: Message):
     else:
         inline_buttons = InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about")],
-                [InlineKeyboardButton("• CMD", callback_data="cmd")],
-                [InlineKeyboardButton("• Close •", callback_data="close")]
+                [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"), InlineKeyboardButton("ᴄᴍᴅ •", callback_data="cmd")],
+                [InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close")]
             ]
         )
 
@@ -154,9 +153,8 @@ async def cb_handler(client: Bot, query: CallbackQuery):
     elif data in ["start", "home"]:
         inline_buttons = InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about")],
-                [InlineKeyboardButton("• CMD", callback_data="cmd")],
-                [InlineKeyboardButton("• Close •", callback_data="close")]
+                [InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"), InlineKeyboardButton("ᴄᴍᴅ •", callback_data="cmd")],
+                [InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close")]
             ]
         )
         try:
@@ -170,7 +168,13 @@ async def cb_handler(client: Bot, query: CallbackQuery):
 
     elif data == "cmd":
         if user_id == OWNER_ID or user_id in ADMINS:
-            await query.edit_message_text(CMD_MSG, parse_mode=ParseMode.HTML)
+            await query.edit_message_text(
+                CMD_MSG,
+                reply_markup=InlineKeyboardMarkup([  # <-- UPDATED
+                    [InlineKeyboardButton("• ʙᴀᴄᴋ", callback_data="start"), InlineKeyboardButton("ᴄʟᴏsᴇ •", callback_data="close")]
+                ]),
+                parse_mode=ParseMode.HTML
+            )
         else:
             await query.answer("Only admins can use this ❌", show_alert=True)
 
